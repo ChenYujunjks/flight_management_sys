@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-//import { trpc } from "@/components/Provider";
+import { trpc } from "@/components/provider";
 
 const FactorialPage = () => {
   const [inputValue, setInputValue] = useState(0);
