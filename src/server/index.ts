@@ -1,20 +1,16 @@
-import { initTRPC } from "@trpc/server";
 import { z } from "zod"; // 用于输入校验
 import { db } from "@/server/db"; // 已经配置好的 Drizzle ORM 实例
 import { flight } from "@/server/db/schema"; // 导入 flight 表的定义
-
+import { createTRPCRouter } from "./context";
+import { publicProcedure, protectedProcedure } from "./context";
 // 初始化 tRPC
-const t = initTRPC.create();
-const router = t.router;
-const publicProcedure = t.procedure;
-
 const factorial = (n: number): number => {
   if (n === 0) return 1;
   return n * factorial(n - 1);
 };
 
 // 创建 tRPC 路由
-export const appRouter = router({
+export const appRouter = createTRPCRouter({
   calculateFactorial: publicProcedure
     .input(z.number().int().min(0)) // 输入必须是非负整数
     .mutation(({ input }) => {
