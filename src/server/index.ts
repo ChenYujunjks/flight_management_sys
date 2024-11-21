@@ -1,5 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import { z } from "zod"; // 用于输入校验
+import { db } from "@/server/db"; // 已经配置好的 Drizzle ORM 实例
+import { flight } from "@/server/db/schema"; // 导入 flight 表的定义
 
 // 初始化 tRPC
 const t = initTRPC.create();
@@ -23,6 +25,11 @@ export const appRouter = router({
       }
       return { result: factorial(input) };
     }),
+  // 新增查询 flights 的路由
+  getFlights: publicProcedure.query(async () => {
+    const flights = await db.select().from(flight);
+    return flights;
+  }),
 });
 
 export type AppRouter = typeof appRouter;
