@@ -6,9 +6,9 @@ export default defineConfig({
     host: "localhost", // 数据库主机地址
     port: 3306, // 数据库端口
     user: "root", // 数据库用户名
-    password: "153215321532", // 数据库密码
+    password: "process.env.DB_PASSWORD", // 数据库密码
     database: "fmp", // 数据库名称
   },
-  schema: "./server/db/schema.ts",
-  out: "./server/db", // 指定输出的文件夹
+  schema: "./src/server/db/schema.ts",
+  out: "./src/server/db", // 指定输出的文件夹
 });

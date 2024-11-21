@@ -9,7 +9,6 @@ export default function SvgGalleryPage() {
     { src: "/file.svg", alt: "File Icon" },
     { src: "/globe.svg", alt: "Globe Icon" },
     { src: "/next.svg", alt: "Next.js Icon" },
-    { src: "/vercel.svg", alt: "Vercel Icon" },
     { src: "/window.svg", alt: "Window Icon" },
   ];
 
