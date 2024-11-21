@@ -1,7 +1,14 @@
+"use client";
 import { useState } from "react";
 import { trpc } from "@/components/provider";
 import { Button } from "@/components/ui/button";
-import { Table, TableHeader, TableRow, TableCell, TableBody } from "shadcn/ui";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@/components/ui/table";
 
 export default function FlightsPage() {
   const [flightsVisible, setFlightsVisible] = useState(false);
