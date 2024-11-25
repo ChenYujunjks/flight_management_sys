@@ -44,7 +44,7 @@ export async function signup(formData: FormData) {
     await db.insert(userTable).values({
       id: userId,
       email: fd.email,
-      hashedPassword: hashedPassword,
+      password: hashedPassword,
     });
   } catch (e) {
     throw new Error("User already exists");
@@ -56,6 +56,7 @@ export async function signup(formData: FormData) {
         email: fd.email,
         firstName: fd.firstName,
         lastName: fd.lastName,
+        password: hashedPassword,
         buildingNumber: fd.buildNum,
         city: fd.city,
         state: fd.state,
@@ -78,6 +79,7 @@ export async function signup(formData: FormData) {
         email: fd.email,
         firstName: fd.firstName,
         lastName: fd.lastName,
+        password: hashedPassword,
         dateOfBirth: fd.dateOfBirth,
         airlineName: fd.airlineName,
         permission: fd.permission,
@@ -89,9 +91,12 @@ export async function signup(formData: FormData) {
   }
 
   if (fd.userType === "booking-agent") {
+    const bookingAgentId = generateId(10); // 生成唯一的 bookingAgentId
     try {
       await db.insert(bookingAgent).values({
         email: fd.email,
+        password: hashedPassword,
+        bookingAgentId,
         airlineName: fd.airlineName,
       });
     } catch (e) {
@@ -102,10 +107,11 @@ export async function signup(formData: FormData) {
 
   const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
+  const cookiesObj = await cookies();
+  cookiesObj.set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
   return redirect("/");
 }

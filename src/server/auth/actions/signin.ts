@@ -24,17 +24,18 @@ export async function signin(formData: FormData) {
 
   const validPassword = await new (
     await import("oslo/password")
-  ).Argon2id().verify(existingUser.hashedPassword, password);
+  ).Argon2id().verify(existingUser.password, password);
   if (!validPassword) {
     throw new Error("Incorrect password");
   }
 
   const session = await lucia.createSession(existingUser.id, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
+  const cookiesObj = await cookies();
+  cookiesObj.set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
   return redirect("/");
 }
