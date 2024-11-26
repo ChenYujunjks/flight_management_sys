@@ -1,4 +1,4 @@
-// src/server/trpc/auth.ts
+// src/server/auth/actions/signup.ts
 import { z } from "zod";
 import { db } from "@/server/db";
 import {
@@ -31,7 +31,7 @@ export const signupHandler = async (
       password: hashedPassword,
     });
   } catch (e) {
-    throw new Error("User already exists");
+    throw new Error("User already exists", e);
   }
 
   if (fd.userType == "customer") {

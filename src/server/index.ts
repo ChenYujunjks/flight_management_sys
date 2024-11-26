@@ -1,6 +1,9 @@
 import { z } from "zod"; // 用于输入校验
-import { db } from "@/server/db"; // 已经配置好的 Drizzle ORM 实例
+import { db } from "@/server/db";
+import { SignUpFormSchema, SignInFormSchema } from "@/lib/types";
 import { flight } from "@/server/db/schema"; // 导入 flight 表的定义
+import { signupHandler } from "@/server/auth/actions/signup";
+import { signinHandler } from "@/server/auth/actions/signin";
 import { createTRPCRouter } from "./context";
 import { publicProcedure, protectedProcedure } from "./context";
 // 初始化 tRPC
@@ -21,14 +24,18 @@ export const appRouter = createTRPCRouter({
       }
       return { result: factorial(input) };
     }),
+  // 这是一个非常简单的 tRPC 例子，用于测试后端连接是否成功。
+  // 你可以在前端通过 tRPC 客户端调用 `calculateFactorial`，传递一个数字来测试是否连接成功。
   // 新增查询 flights 的路由
   getFlights: publicProcedure.query(async () => {
     const flights = await db.select().from(flight);
     return flights;
   }),
+  signUp: publicProcedure
+    .input(SignUpFormSchema) // 使用预定义的 Schema 验证输入
+    .mutation(async ({ input }) => {
+      return await signupHandler(input); // 调用抽取的 signUp 函数
+    }),
 });
 
 export type AppRouter = typeof appRouter;
-
-// 这是一个非常简单的 tRPC 例子，用于测试后端连接是否成功。
-// 你可以在前端通过 tRPC 客户端调用 `calculateFactorial`，传递一个数字来测试是否连接成功。
