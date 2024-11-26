@@ -1,38 +1,22 @@
-"use server";
-
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+// src/server/auth/actions/signup.ts
+import { z } from "zod";
 import { db } from "@/server/db";
-import { lucia } from "@/server/auth";
 import {
+  userTable,
+  customer,
   airlineStaff,
   bookingAgent,
-  customer,
-  userTable,
 } from "@/server/db/schema";
+import { cookies } from "next/headers";
+import { lucia } from "@/server/auth";
 import { generateId } from "lucia";
 import { SignUpFormSchema } from "@/lib/types";
 import { eq } from "drizzle-orm";
 
-export async function signup(formData: FormData) {
-  const fd = SignUpFormSchema.parse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-    userType: formData.get("userType"),
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    buildNum: formData.get("buildNum"),
-    street: formData.get("street"),
-    city: formData.get("city"),
-    state: formData.get("state"),
-    phoneNum: formData.get("phoneNum"),
-    passportNum: formData.get("passportNum"),
-    passportExp: formData.get("passportExp"),
-    passportCountry: formData.get("passportCountry"),
-    dateOfBirth: formData.get("dateOfBirth"),
-    airlineName: formData.get("airlineName"),
-    permission: formData.get("permission"),
-  });
+export const signupHandler = async (
+  input: z.infer<typeof SignUpFormSchema>
+) => {
+  const fd = input;
 
   const hashedPassword = await new (
     await import("oslo/password")
@@ -44,10 +28,10 @@ export async function signup(formData: FormData) {
     await db.insert(userTable).values({
       id: userId,
       email: fd.email,
-      hashedPassword: hashedPassword,
+      password: hashedPassword,
     });
   } catch (e) {
-    throw new Error("User already exists");
+    throw new Error("User already exists", e);
   }
 
   if (fd.userType == "customer") {
@@ -56,6 +40,7 @@ export async function signup(formData: FormData) {
         email: fd.email,
         firstName: fd.firstName,
         lastName: fd.lastName,
+        password: hashedPassword,
         buildingNumber: fd.buildNum,
         city: fd.city,
         state: fd.state,
@@ -78,6 +63,7 @@ export async function signup(formData: FormData) {
         email: fd.email,
         firstName: fd.firstName,
         lastName: fd.lastName,
+        password: hashedPassword,
         dateOfBirth: fd.dateOfBirth,
         airlineName: fd.airlineName,
         permission: fd.permission,
@@ -89,9 +75,12 @@ export async function signup(formData: FormData) {
   }
 
   if (fd.userType === "booking-agent") {
+    const bookingAgentId = generateId(10); // 生成唯一的 bookingAgentId
     try {
       await db.insert(bookingAgent).values({
         email: fd.email,
+        password: hashedPassword,
+        bookingAgentId,
         airlineName: fd.airlineName,
       });
     } catch (e) {
@@ -102,10 +91,13 @@ export async function signup(formData: FormData) {
 
   const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
+  const cookiesObj = await cookies();
+  cookiesObj.set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
-  return redirect("/");
-}
+  return {
+    message: "Signup successful",
+  };
+};

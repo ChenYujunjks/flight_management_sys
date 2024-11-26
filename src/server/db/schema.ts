@@ -65,11 +65,15 @@ export const bookingAgent = mysqlTable("BookingAgent", {
   email: varchar("email", { length: 100 }).notNull().primaryKey(),
   password: varchar("password_hash", { length: 255 }).notNull(),
   bookingAgentId: varchar("booking_agent_id", { length: 20 }).unique(),
+  airlineName: varchar("airline_name", { length: 255 })
+    .notNull()
+    .references(() => airline.name), // foreign key
 });
 
 export const customer = mysqlTable("Customer", {
   email: varchar("email", { length: 100 }).notNull().primaryKey(),
-  name: varchar("name", { length: 50 }),
+  firstName: varchar("first_name", { length: 50 }).notNull(),
+  lastName: varchar("last_name", { length: 50 }).notNull(),
   password: varchar("password_hash", { length: 255 }).notNull(),
   buildingNumber: varchar("building_number", { length: 20 }),
   street: varchar("street", { length: 50 }),
