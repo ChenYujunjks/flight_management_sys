@@ -122,92 +122,262 @@ export default function SignUpPage() {
 
               <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid gap-4">
                 {userType === "customer" && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>First Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="lastName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Last Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="passportNum"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Passport Number</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid gap-6">
+                    <h2 className="text-lg font-semibold">Personal Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>First Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <h2 className="text-lg font-semibold">Address Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="buildNum"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Building Number</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="street"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Street</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>City</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="state"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>State</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <h2 className="text-lg font-semibold">Other Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="phoneNum"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="dateOfBirth"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date of Birth</FormLabel>
+                            <FormControl>
+                              <Input type="date" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="passportExp"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Passport Expiration</FormLabel>
+                            <FormControl>
+                              <Input type="date" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="passportCountry"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Passport Country</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
                 )}
 
                 {userType === "airline-staff" && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="airlineName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Airline Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="permission"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Permission</FormLabel>
-                          <FormControl>
-                            <Select
-                              onValueChange={(value) =>
-                                field.onChange(parseInt(value, 10))
-                              } // 将字符串转为数字
-                              value={String(field.value)} // 将数字转为字符串
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select permission" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="2">Admin</SelectItem>
-                                <SelectItem value="1">Operator</SelectItem>
-                                <SelectItem value="0">None</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid gap-6">
+                    <h2 className="text-lg font-semibold">Personal Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>First Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <h2 className="text-lg font-semibold">Airline Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="airlineName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Airline Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="permission"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Permission</FormLabel>
+                            <FormControl>
+                              <Select
+                                onValueChange={(value) =>
+                                  field.onChange(parseInt(value, 10))
+                                } // 将字符串转为数字
+                                value={String(field.value)} // 将数字转为字符串
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select permission" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="2">Admin</SelectItem>
+                                  <SelectItem value="1">Operator</SelectItem>
+                                  <SelectItem value="0">None</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <h2 className="text-lg font-semibold">Other Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="dateOfBirth"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date of Birth</FormLabel>
+                            <FormControl>
+                              <Input type="date" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                )}
+                {userType === "booking-agent" && (
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid gap-6">
+                    <h2 className="text-lg font-semibold">Airline Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="airlineName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Airline Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
 
