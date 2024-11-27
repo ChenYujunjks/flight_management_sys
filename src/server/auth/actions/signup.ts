@@ -31,7 +31,10 @@ export const signupHandler = async (
       password: hashedPassword,
     });
   } catch (e) {
-    throw new Error("User already exists", e);
+    if (e instanceof Error) {
+      throw new Error(`User already exists: ${e.message}`);
+    }
+    throw new Error("User already exists");
   }
 
   if (fd.userType == "customer") {
@@ -51,7 +54,7 @@ export const signupHandler = async (
         phoneNumber: fd.phoneNum,
         street: fd.street,
       });
-    } catch (e) {
+    } catch {
       await db.delete(userTable).where(eq(userTable.email, fd.email));
       throw new Error("Invalid customer data");
     }
@@ -68,7 +71,7 @@ export const signupHandler = async (
         airlineName: fd.airlineName,
         permission: fd.permission,
       });
-    } catch (e) {
+    } catch {
       await db.delete(userTable).where(eq(userTable.email, fd.email));
       throw new Error("Invalid airline staff data");
     }
@@ -83,7 +86,7 @@ export const signupHandler = async (
         bookingAgentId,
         airlineName: fd.airlineName,
       });
-    } catch (e) {
+    } catch {
       await db.delete(userTable).where(eq(userTable.email, fd.email));
       throw new Error("Invalid booking agent data");
     }

@@ -5,7 +5,7 @@ import { flight } from "@/server/db/schema"; // 导入 flight 表的定义
 import { signupHandler } from "@/server/auth/actions/signup";
 import { signinHandler } from "@/server/auth/actions/signin";
 import { createTRPCRouter } from "./context";
-import { publicProcedure, protectedProcedure } from "./context";
+import { publicProcedure } from "./context";
 // 初始化 tRPC
 const factorial = (n: number): number => {
   if (n === 0) return 1;
@@ -35,6 +35,11 @@ export const appRouter = createTRPCRouter({
     .input(SignUpFormSchema) // 使用预定义的 Schema 验证输入
     .mutation(async ({ input }) => {
       return await signupHandler(input); // 调用抽取的 signUp 函数
+    }),
+  signIn: publicProcedure
+    .input(SignInFormSchema)
+    .mutation(async ({ input }) => {
+      return await signinHandler(input);
     }),
 });
 
