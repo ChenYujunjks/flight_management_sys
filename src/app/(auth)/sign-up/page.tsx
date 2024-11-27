@@ -187,7 +187,12 @@ export default function SignUpPage() {
                         <FormItem>
                           <FormLabel>Permission</FormLabel>
                           <FormControl>
-                            <Select onValueChange={field.onChange} {...field}>
+                            <Select
+                              onValueChange={(value) =>
+                                field.onChange(parseInt(value, 10))
+                              } // 将字符串转为数字
+                              value={String(field.value)} // 将数字转为字符串
+                            >
                               <SelectTrigger>
                                 <SelectValue placeholder="Select permission" />
                               </SelectTrigger>
