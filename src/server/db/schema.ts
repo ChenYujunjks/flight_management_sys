@@ -17,7 +17,6 @@ export const userTable = mysqlTable("User", {
   })
     .unique()
     .notNull(), // 用户唯一标识符
-  name: varchar("name", { length: 100 }),
   password: varchar("password_hash", { length: 255 }).notNull(),
 });
 

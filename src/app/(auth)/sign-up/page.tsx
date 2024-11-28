@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -232,6 +231,19 @@ export default function SignUpPage() {
                             <FormLabel>Date of Birth</FormLabel>
                             <FormControl>
                               <Input type="date" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="passportNum"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Passport Number</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
