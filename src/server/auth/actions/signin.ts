@@ -40,6 +40,6 @@ export const signinHandler = async (
     sessionCookie.attributes
   );
   return {
-    message: "Signup successful",
+    message: "Signin successful",
   };
 };
