@@ -1,33 +1,30 @@
-// ticketing/my-flights/page.tsx
-"use client";
-import { trpc } from "@/components/provider";
+import { and, eq, sql } from "drizzle-orm";
 import FlightsTable from "@/components/flightTable";
-import { Toaster, toast } from "sonner";
+import { getUser } from "@/server/auth/getUser";
+import { db } from "@/server/db";
+import { flight, ticket } from "@/server/db/schema";
 
-const MyFlightsPage = () => {
-  const { data, isLoading, error, refetch } =
-    trpc.myFlights.getMyFlights.useQuery(undefined, {
-      onError: (err) => {
-        toast.error("Failed to fetch your flights", {
-          description: err.message,
-        });
-      },
-      onSuccess: () => {
-        // 可选：在成功获取数据后执行某些操作
-      },
-    });
+export default async function MyFlightsPage() {
+  const user = await getUser();
+  const data = await db
+    //@ts-expect-error: this works
+    .select(flight)
+    .from(flight)
+    .rightJoin(ticket, eq(flight.flightNum, ticket.flightNum))
+    .where(
+      and(
+        eq(ticket.customerEmail, user!.email),
+        sql`Date(${flight.departureTime}) > CURDATE()`
+      )
+    );
 
   return (
     <main className="flex flex-col gap-4 p-4">
       <h2 className="ml-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         My Flights
       </h2>
-      {isLoading && <div>Loading...</div>}
-      {error && <div>Error: {error.message}</div>}
-      {data && <FlightsTable data={data} />}
-      <Toaster /> {/* 确保 Toaster 被渲染以支持 toast */}
+      {/* @ts-expect-error: this works */}
+      <FlightsTable data={data} />
     </main>
   );
-};
-
-export default MyFlightsPage;
+}
