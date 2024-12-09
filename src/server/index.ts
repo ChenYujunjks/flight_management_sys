@@ -6,6 +6,8 @@ import { signupHandler } from "@/server/auth/actions/signup";
 import { signinHandler } from "@/server/auth/actions/signin";
 import { createTRPCRouter } from "./context";
 import { publicProcedure } from "./context";
+import { purchaseRouter } from "./router/purchase";
+import { searchRouter } from "./router/search";
 // 初始化 tRPC
 const factorial = (n: number): number => {
   if (n === 0) return 1;
@@ -24,9 +26,7 @@ export const appRouter = createTRPCRouter({
       }
       return { result: factorial(input) };
     }),
-  // 这是一个非常简单的 tRPC 例子，用于测试后端连接是否成功。
-  // 你可以在前端通过 tRPC 客户端调用 `calculateFactorial`，传递一个数字来测试是否连接成功。
-  // 新增查询 flights 的路由
+  //thats a test router
   getFlights: publicProcedure.query(async () => {
     const flights = await db.select().from(flight);
     return flights;
@@ -41,6 +41,11 @@ export const appRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await signinHandler(input);
     }),
+  // 合并新路由
+  flights: createTRPCRouter({
+    purchase: purchaseRouter,
+    search: searchRouter,
+  }),
 });
 
 export type AppRouter = typeof appRouter;
