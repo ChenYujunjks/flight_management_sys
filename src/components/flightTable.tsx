@@ -84,7 +84,6 @@ const flightsTableColumn: ColumnDef<InferSelectModel<typeof flight>>[] = [
   },
 ];
 
-// FlightsTable 组件
 const FlightsTable = ({
   data,
 }: {

@@ -1,3 +1,4 @@
+// /server/index.ts
 import { z } from "zod"; // 用于输入校验
 import { db } from "@/server/db";
 import { SignUpFormSchema, SignInFormSchema } from "@/lib/types";
@@ -8,6 +9,8 @@ import { createTRPCRouter } from "./context";
 import { publicProcedure } from "./context";
 import { purchaseRouter } from "./router/purchase";
 import { searchRouter } from "./router/search";
+import { myFlightsRouter } from "./router/myFlights";
+import { statisticRouter } from "./router/statistic";
 // 初始化 tRPC
 const factorial = (n: number): number => {
   if (n === 0) return 1;
@@ -46,6 +49,8 @@ export const appRouter = createTRPCRouter({
     purchase: purchaseRouter,
     search: searchRouter,
   }),
+  myFlights: myFlightsRouter,
+  statistic: statisticRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,76 +1,117 @@
+// flights/page.tsx
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+//import { type InferSelectModel } from "drizzle-orm";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { type z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { searchFlightsFormSchema } from "@/lib/types";
+//import { type flight } from "@/server/db/schema";
 import FlightsTableWithPurchase from "./flightsTableWithPurchase";
 import { trpc } from "@/components/provider";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
-const FlightsPage = () => {
-  const [searchParams, setSearchParams] = useState({
-    departureAirport: "",
-    arrivalAirport: "",
-    departureDate: "",
+const SearchPage = () => {
+  const form = useForm<z.infer<typeof searchFlightsFormSchema>>({
+    resolver: zodResolver(searchFlightsFormSchema),
   });
 
-  const searchFlights = trpc.flights.search.useMutation({
-    onSuccess: (data) => {
-      // 处理搜索结果，例如将结果传递给表格组件
-      // 您可能需要将表格组件的数据来源更改为搜索结果
-      // 或者将搜索结果存储在状态中并传递给表格组件
-    },
-    onError: (error) => {
-      toast.error("Search failed", {
-        description: error.message,
-      });
-    },
-  });
+  // State to hold search parameters
+  const [searchParams, setSearchParams] = useState<z.infer<typeof searchFlightsFormSchema> | null>(null);
 
-  const handleSearch = () => {
-    searchFlights.mutate(searchParams);
+  // 使用 tRPC 的 flights.search 查询
+  const { data, isLoading, error, refetch } = trpc.flights.search.useQuery(
+    searchParams || {}, // 传递搜索参数
+    {
+      enabled: !!searchParams, // 仅在有搜索参数时启用查询
+      onError: (err) => {
+        toast.error("Search failed", {
+          description: err.message,
+        });
+      },
+      onSuccess: () => {
+        toast.success("Search completed");
+      },
+    }
+  );
+
+  const onSubmit = (param: z.infer<typeof searchFlightsFormSchema>) => {
+    setSearchParams(param);
+    toast("Searching...");
+    // 触发查询
+    refetch();
   };
 
   return (
-    <div>
-      <div className="flex space-x-4 mb-4">
-        <Input
-          placeholder="Departure Airport"
-          value={searchParams.departureAirport}
-          onChange={(e) =>
-            setSearchParams((prev) => ({
-              ...prev,
-              departureAirport: e.target.value,
-            }))
-          }
-        />
-        <Input
-          placeholder="Arrival Airport"
-          value={searchParams.arrivalAirport}
-          onChange={(e) =>
-            setSearchParams((prev) => ({
-              ...prev,
-              arrivalAirport: e.target.value,
-            }))
-          }
-        />
-        <Input
-          type="date"
-          placeholder="Departure Date"
-          value={searchParams.departureDate}
-          onChange={(e) =>
-            setSearchParams((prev) => ({
-              ...prev,
-              departureDate: e.target.value,
-            }))
-          }
-        />
-        <Button onClick={handleSearch}>Search Flights</Button>
-      </div>
-      {/* 假设您希望根据搜索结果更新表格 */}
-      {/* 需要修改 FlightsTableWithPurchase 以接受数据作为 props */}
-      <FlightsTableWithPurchase />
-    </div>
+    <main className="flex flex-col gap-4 p-4">
+      <h2 className="ml-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+        Search Flights
+      </h2>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-flow-col justify-stretch gap-4 p-4">
+          <FormField
+            control={form.control}
+            name="departureAirport"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Departure Airport</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="arrivalAirport"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Arrival Airport</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="departureDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Departure Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="self-end">
+            Search
+          </Button>
+        </form>
+      </Form>
+      <h3 className="ml-4 scroll-m-20 text-xl font-semibold tracking-tight">
+        Result:
+      </h3>
+      {isLoading && <div>Loading...</div>}
+      {error && <div>Error: {error.message}</div>}
+      {!isLoading && !error && data && <FlightsTableWithPurchase data={data} />}
+    </main>
   );
 };
 
-export default FlightsPage;
+export default SearchPage;
