@@ -9,9 +9,8 @@ import { createTRPCRouter } from "./context";
 import { publicProcedure } from "./context";
 import { purchaseRouter } from "./router/purchase";
 import { searchRouter } from "./router/search";
-import { myFlightsRouter } from "./router/myFlights";
 import { statisticRouter } from "./router/statistic";
-// 初始化 tRPC
+// INIT tRPC
 const factorial = (n: number): number => {
   if (n === 0) return 1;
   return n * factorial(n - 1);
@@ -44,12 +43,9 @@ export const appRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await signinHandler(input);
     }),
-  // 合并新路由
-  flights: createTRPCRouter({
-    purchase: purchaseRouter,
-    search: searchRouter,
-  }),
-  myFlights: myFlightsRouter,
+
+  purchase: purchaseRouter,
+  search: searchRouter,
   statistic: statisticRouter,
 });
 

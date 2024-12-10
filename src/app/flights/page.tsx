@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { searchFlightsFormSchema } from "@/lib/types";
-//import { type flight } from "@/server/db/schema";
 import FlightsTableWithPurchase from "./flightsTableWithPurchase";
 import { trpc } from "@/components/provider";
 
@@ -33,7 +32,7 @@ const SearchPage = () => {
   > | null>(null);
 
   // 使用 tRPC 的 flights.search 查询
-  const { data, isLoading, error, refetch } = trpc.flights.search.useQuery(
+  const { data, isLoading, error, refetch } = trpc.search.useQuery(
     searchParams || {}, // 传递搜索参数
     {
       enabled: !!searchParams, // 仅在有搜索参数时启用查询
