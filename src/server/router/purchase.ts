@@ -7,7 +7,7 @@ import { bookingAgent, ticket } from "@/server/db/schema";
 import { getUser } from "@/server/auth/getUser";
 import { getUserType } from "@/server/auth/getUserType";
 import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid"; // 引入 UUID 库
+import { v4 as uuidv4 } from "uuid";
 import { eq } from "drizzle-orm";
 
 export const purchaseRouter = publicProcedure
@@ -73,7 +73,7 @@ export const purchaseRouter = publicProcedure
       }
 
       return { message: "Purchased successfully" };
-    } catch (e) {
+    } catch {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Failed to purchase",

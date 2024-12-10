@@ -34,6 +34,16 @@ export const statisticRouter = createTRPCRouter({
         )[0] ?? {};
 
       try {
+        const conditions = [
+          or(
+            eq(ticket.customerEmail, user.email),
+            eq(ticket.bookingAgentId, bookingAgentId ?? "INVALID_AGENT_ID") // 修改为字符串
+          ),
+          sql`DATE(${flight.departureTime}) BETWEEN DATE('${
+            startDate.toISOString().split("T")[0]
+          }') AND DATE('${endDate.toISOString().split("T")[0]}')`,
+        ];
+
         const result = await db
           .select({
             month: sql<string>`MONTH(${flight.departureTime})`,
@@ -42,17 +52,7 @@ export const statisticRouter = createTRPCRouter({
           })
           .from(ticket)
           .leftJoin(flight, eq(ticket.flightNum, flight.flightNum))
-          .where(
-            and(
-              or(
-                eq(ticket.customerEmail, user.email),
-                eq(ticket.bookingAgentId, bookingAgentId ?? -1)
-              ),
-              sql`DATE(${flight.departureTime}) BETWEEN DATE('${
-                startDate.toISOString().split("T")[0]
-              }') AND DATE('${endDate.toISOString().split("T")[0]}')`
-            )
-          )
+          .where(and(...conditions))
           .groupBy(
             sql`MONTH(${flight.departureTime})`,
             sql`YEAR(${flight.departureTime})`
@@ -60,6 +60,7 @@ export const statisticRouter = createTRPCRouter({
 
         return result;
       } catch (error) {
+        console.error("Statistics error:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to fetch statistics.",
