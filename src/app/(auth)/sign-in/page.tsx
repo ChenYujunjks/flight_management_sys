@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { SignInFormSchema } from "@/lib/types";
 import { trpc } from "@/components/provider";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation"; // 如果使用 Next.js 13+
+import { useRouter } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

@@ -5,7 +5,6 @@ import { type InferSelectModel } from "drizzle-orm";
 import { DataTable } from "@/components/dataTable";
 import { type flight } from "@/server/db/schema";
 
-// 定义表格列
 const flightsTableColumn: ColumnDef<InferSelectModel<typeof flight>>[] = [
   {
     header: "Flight Number",

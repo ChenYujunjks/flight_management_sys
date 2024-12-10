@@ -28,7 +28,9 @@ const SearchPage = () => {
   });
 
   // State to hold search parameters
-  const [searchParams, setSearchParams] = useState<z.infer<typeof searchFlightsFormSchema> | null>(null);
+  const [searchParams, setSearchParams] = useState<z.infer<
+    typeof searchFlightsFormSchema
+  > | null>(null);
 
   // 使用 tRPC 的 flights.search 查询
   const { data, isLoading, error, refetch } = trpc.flights.search.useQuery(
@@ -59,7 +61,10 @@ const SearchPage = () => {
         Search Flights
       </h2>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-flow-col justify-stretch gap-4 p-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-flow-col justify-stretch gap-4 p-4"
+        >
           <FormField
             control={form.control}
             name="departureAirport"
