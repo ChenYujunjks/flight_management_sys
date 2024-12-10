@@ -10,7 +10,6 @@ export const trpc = createTRPCReact<AppRouter>({});
 
 export function Provider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
-  //创建客户端
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [

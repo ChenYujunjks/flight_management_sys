@@ -85,25 +85,25 @@ export const customer = mysqlTable("Customer", {
   dateOfBirth: date("date_of_birth", { mode: "string" }),
 });
 
-export const flight = mysqlTable("Flight", {
-  flightNum: varchar("flight_num", { length: 20 }).notNull().primaryKey(),
-  airlineName: varchar("airline_name", { length: 50 }).references(
-    () => airline.name
-  ),
-  departureTime: datetime("departure_time", { mode: "string" }),
-  arrivalTime: datetime("arrival_time", { mode: "string" }),
-  price: decimal("price", { precision: 10, scale: 2 }),
-  status: varchar("status", { length: 20 }),
-  airplaneId: varchar("airplane_id", { length: 20 }).references(
-    () => airplane.id
-  ),
-  departureAirport: varchar("departure_airport", { length: 50 }).references(
-    () => airport.name
-  ),
-  arrivalAirport: varchar("arrival_airport", { length: 50 }).references(
-    () => airport.name
-  ),
-});
+  export const flight = mysqlTable("Flight", {
+    flightNum: varchar("flight_num", { length: 20 }).notNull().primaryKey(),
+    airlineName: varchar("airline_name", { length: 50 }).references(
+      () => airline.name
+    ),
+    departureTime: datetime("departure_time", { mode: "string" }),
+    arrivalTime: datetime("arrival_time", { mode: "string" }),
+    price: decimal("price", { precision: 10, scale: 2 }),
+    status: varchar("status", { length: 20 }),
+    airplaneId: varchar("airplane_id", { length: 20 }).references(
+      () => airplane.id
+    ),
+    departureAirport: varchar("departure_airport", { length: 50 }).references(
+      () => airport.name
+    ),
+    arrivalAirport: varchar("arrival_airport", { length: 50 }).references(
+      () => airport.name
+    ),
+  });
 
 export const ticket = mysqlTable("Ticket", {
   ticketId: varchar("ticket_id", { length: 20 }).notNull().primaryKey(),
