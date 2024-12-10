@@ -20,10 +20,12 @@ export const purchaseRouter = publicProcedure
   .mutation(async ({ input }) => {
     const { flightNum, email } = input;
 
-    // 获取用户信息
+    console.log("Purchase input received:", { flightNum, email });
+
     const user = await getUser();
 
     if (!user) {
+      console.error("User not authenticated");
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Please sign in",
@@ -31,14 +33,16 @@ export const purchaseRouter = publicProcedure
     }
 
     const userType = await getUserType(user.email);
+    console.log("User type:", userType);
 
     try {
       if (userType === "customer") {
         await db.insert(ticket).values({
-          ticketId: uuidv4(), // 生成唯一 ticketId
+          ticketId: uuidv4(),
           customerEmail: email || user.email,
           flightNum,
         });
+        console.log("Ticket inserted for customer");
         revalidatePath("/ticketing/my-flights");
         revalidatePath("/ticketing/spending");
       } else if (userType === "booking-agent") {
@@ -57,7 +61,7 @@ export const purchaseRouter = publicProcedure
         }
 
         await db.insert(ticket).values({
-          ticketId: uuidv4(), // 生成唯一 ticketId
+          ticketId: uuidv4(),
           bookingAgentId,
           customerEmail: email!,
           flightNum,
@@ -73,7 +77,8 @@ export const purchaseRouter = publicProcedure
       }
 
       return { message: "Purchased successfully" };
-    } catch {
+    } catch (err) {
+      console.error("Purchase failed:", err);
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Failed to purchase",

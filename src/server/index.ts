@@ -43,11 +43,9 @@ export const appRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       return await signinHandler(input);
     }),
-  // 合并新路由
-  flights: createTRPCRouter({
-    purchase: purchaseRouter,
-    search: searchRouter,
-  }),
+
+  purchase: purchaseRouter,
+  search: searchRouter,
   statistic: statisticRouter,
 });
 

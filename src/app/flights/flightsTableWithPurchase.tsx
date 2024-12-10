@@ -23,9 +23,9 @@ interface FlightsTableWithPurchaseProps {
 const flightsTableColumn: ColumnDef<InferSelectModel<typeof flight>>[] = [
   {
     header: "Flight Number",
-    accessorKey: "flightNumber",
+    accessorKey: "flightNum",
     cell: ({ row }) => {
-      const val: string = row.getValue("flightNumber");
+      const val: string = row.getValue("flightNum");
       return <div className="font-mono">{val}</div>;
     },
   },
@@ -116,17 +116,18 @@ export default FlightsTableWithPurchase;
 // PurchaseDialog 组件
 function PurchaseDialog({ row }: { row: any }) {
   const [email, setEmail] = useState<string>("");
-  const purchaseMutation = trpc.flights.purchase.useMutation({
+  const purchaseMutation = trpc.purchase.useMutation({
     onSuccess: () => {
       toast.success("Purchase successful", {
         description: `Purchased flight ${row.getValue(
-          "flightNumber"
+          "flightNum"
         )} From ${row.getValue("departureAirport")} to ${row.getValue(
           "arrivalAirport"
         )} At ${new Date(row.getValue("departureTime")).toLocaleString()}`,
       });
     },
     onError: (error) => {
+      console.error("Purchase failed:", error);
       toast.error("Purchase failed", {
         description: error.message,
       });
@@ -135,7 +136,7 @@ function PurchaseDialog({ row }: { row: any }) {
 
   const handlePurchase = () => {
     purchaseMutation.mutate({
-      flightNum: row.getValue("flightNumber"),
+      flightNum: row.getValue("flightNum"),
       email: email || undefined,
     });
   };
