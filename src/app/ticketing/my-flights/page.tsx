@@ -19,7 +19,7 @@ export default async function MyFlightsPage() {
       status: flight.status,
     })
     .from(flight)
-    .rightJoin(ticket, eq(flight.flightNum, ticket.flightNum))
+    .innerJoin(ticket, eq(flight.flightNum, ticket.flightNum))
     .where(
       and(
         eq(ticket.customerEmail, user!.email),
