@@ -7,6 +7,8 @@ import { bookingAgent, ticket } from "@/server/db/schema";
 import { getUser } from "@/server/auth/getUser";
 import { getUserType } from "@/server/auth/getUserType";
 import { revalidatePath } from "next/cache";
+import { v4 as uuidv4 } from "uuid"; // 引入 UUID 库
+import { eq } from "drizzle-orm";
 
 export const purchaseRouter = publicProcedure
   .input(
@@ -33,6 +35,7 @@ export const purchaseRouter = publicProcedure
     try {
       if (userType === "customer") {
         await db.insert(ticket).values({
+          ticketId: uuidv4(), // 生成唯一 ticketId
           customerEmail: email || user.email,
           flightNum,
         });
@@ -54,6 +57,7 @@ export const purchaseRouter = publicProcedure
         }
 
         await db.insert(ticket).values({
+          ticketId: uuidv4(), // 生成唯一 ticketId
           bookingAgentId,
           customerEmail: email!,
           flightNum,
@@ -69,7 +73,7 @@ export const purchaseRouter = publicProcedure
       }
 
       return { message: "Purchased successfully" };
-    } catch (error) {
+    } catch (e) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Failed to purchase",

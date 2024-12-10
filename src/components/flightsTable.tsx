@@ -8,9 +8,9 @@ import { type flight } from "@/server/db/schema";
 const flightsTableColumn: ColumnDef<InferSelectModel<typeof flight>>[] = [
   {
     header: "Flight Number",
-    accessorKey: "flightNumber",
+    accessorKey: "flightNum",
     cell: ({ row }) => {
-      const val: string = row.getValue("flightNumber");
+      const val: string = row.getValue("flightNum");
       return <span className="font-mono">{val}</span>;
     },
   },
@@ -67,9 +67,9 @@ const flightsTableColumn: ColumnDef<InferSelectModel<typeof flight>>[] = [
   },
   {
     header: "Airplane ID",
-    accessorKey: "airplaneIdNum",
+    accessorKey: "airplaneId",
     cell: ({ row }) => {
-      const val: string = row.getValue("airplaneIdNum");
+      const val: string = row.getValue("airplaneId");
       return <span className="font-mono">{val}</span>;
     },
   },

@@ -1,5 +1,5 @@
 import { and, eq, sql } from "drizzle-orm";
-import FlightsTable from "@/components/flightTable";
+import FlightsTable from "@/components/flightsTable";
 import { getUser } from "@/server/auth/getUser";
 import { db } from "@/server/db";
 import { flight, ticket } from "@/server/db/schema";
@@ -7,8 +7,17 @@ import { flight, ticket } from "@/server/db/schema";
 export default async function MyFlightsPage() {
   const user = await getUser();
   const data = await db
-    //@ts-expect-error: this works
-    .select(flight)
+    .select({
+      flightNum: flight.flightNum,
+      airlineName: flight.airlineName,
+      departureAirport: flight.departureAirport,
+      arrivalAirport: flight.arrivalAirport,
+      departureTime: flight.departureTime,
+      arrivalTime: flight.arrivalTime,
+      price: flight.price,
+      airplaneId: flight.airplaneId,
+      status: flight.status,
+    })
     .from(flight)
     .rightJoin(ticket, eq(flight.flightNum, ticket.flightNum))
     .where(
@@ -23,7 +32,6 @@ export default async function MyFlightsPage() {
       <h2 className="ml-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         My Flights
       </h2>
-      {/* @ts-expect-error: this works */}
       <FlightsTable data={data} />
     </main>
   );
