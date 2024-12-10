@@ -1,8 +1,6 @@
-// statistic/page.tsx
 "use client";
 
 import { useState } from "react";
-import SpendingDataChart from "./spendingChart";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { type DateRange } from "react-day-picker";
@@ -19,7 +17,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/components/provider";
 import { toast } from "sonner";
+import SpendingDataChart from "./spendingChart";
 
+// 定义 Zod schema 来校验用户选择的日期范围
 const dateRangeSchema = z.object({
   startDate: z.date(),
   endDate: z.date(),
@@ -41,11 +41,13 @@ export default function SpendingPage() {
     to: addDays(new Date(2024, 4, 1), 20),
   });
 
+  // 从 data 中计算总和
   const total = data.reduce(
     (acc, { sum }) => acc + parseFloat(sum ? sum : "0"),
     0
   );
 
+  // 使用react-hook-form来管理表单数据
   const form = useForm<DateRangeInput>({
     resolver: zodResolver(dateRangeSchema),
     defaultValues: {
@@ -54,23 +56,34 @@ export default function SpendingPage() {
     },
   });
 
-  const { handleSubmit } = form;
+  const { startDate, endDate } = form.getValues();
 
-  const { mutate, isLoading } = trpc.statistic.getStatistics.useMutation({
-    onSuccess: (result) => {
-      setData(result);
-      toast.success("Statistics fetched successfully");
+  // 使用useQuery来查询统计数据，初始enabled为false表示不在挂载时立即请求
+  const { refetch, isLoading } = trpc.statistic.useQuery(
+    {
+      startDate,
+      endDate,
     },
-    onError: (err) => {
-      toast.error("Failed to fetch statistics", { description: err.message });
-    },
-  });
+    {
+      enabled: false, // 不自动请求，等待手动调用 refetch()
+      onError: (err) => {
+        toast.error("Failed to fetch statistics", { description: err.message });
+      },
+      onSuccess: (result) => {
+        setData(result);
+        toast.success("Statistics fetched successfully");
+      },
+    }
+  );
 
+  // 提交表单时，使用 refetch 来手动触发请求
   const onSubmit = (input: DateRangeInput) => {
-    mutate({
-      startDate: input.startDate,
-      endDate: input.endDate,
-    });
+    // 因为我们用 useQuery 时参数是从 form.getValues() 获取的
+    // 如果需要的话，可以先调用 form.setValue 来同步更新 startDate, endDate
+    form.setValue("startDate", input.startDate);
+    form.setValue("endDate", input.endDate);
+    // 触发请求
+    refetch();
   };
 
   return (
@@ -110,6 +123,7 @@ export default function SpendingPage() {
               onSelect={(selected) => {
                 setDate(selected);
                 if (selected?.from && selected?.to) {
+                  // 更新表单中的日期
                   form.setValue("startDate", selected.from);
                   form.setValue("endDate", selected.to);
                 }
@@ -118,7 +132,7 @@ export default function SpendingPage() {
             />
           </PopoverContent>
         </Popover>
-        <Button onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+        <Button onClick={form.handleSubmit(onSubmit)} disabled={isLoading}>
           {isLoading ? "Searching..." : "Search"}
         </Button>
       </div>

@@ -1,13 +1,11 @@
 import { count, desc, eq, sum } from "drizzle-orm";
-import dynamic from "next/dynamic";
 import { getUser } from "@/server/auth/getUser";
 import { getUserType } from "@/server/auth/getUserType";
 import { db } from "@/server/db";
 import { bookingAgent, flight, ticket } from "@/server/db/schema";
 
-const CustomerChart = dynamic(() => import("./customerChart"), {
-  ssr: false,
-});
+// 注意，这里不再直接 dynamic import
+import CustomerChartWrapper from "./customerChartWrapper";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getUser();
@@ -51,7 +49,8 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             <h2 className="ml-4 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
               Top Customers
             </h2>
-            <CustomerChart data={data!} />
+            {/* 使用客户端组件进行动态导入 */}
+            <CustomerChartWrapper data={data!} />
           </div>
         )}
       </div>
