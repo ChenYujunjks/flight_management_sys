@@ -10,6 +10,7 @@ import { publicProcedure } from "./context";
 import { purchaseRouter } from "./router/purchase";
 import { searchRouter } from "./router/search";
 import { statisticRouter } from "./router/statistic";
+import { systemReportRouter } from "./router/system-report";
 // INIT tRPC
 const factorial = (n: number): number => {
   if (n === 0) return 1;
@@ -47,6 +48,7 @@ export const appRouter = createTRPCRouter({
   purchase: purchaseRouter,
   search: searchRouter,
   statistic: statisticRouter,
+  systemReport: systemReportRouter,
 });
 
 export type AppRouter = typeof appRouter;

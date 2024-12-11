@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { type z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import FlightsTableWithPurchase from "./flightsTableWithPurchase";
 import { trpc } from "@/components/provider";
 
 const SearchPage = () => {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof searchFlightsFormSchema>>({
     resolver: zodResolver(searchFlightsFormSchema),
   });
@@ -41,22 +42,20 @@ const SearchPage = () => {
   useEffect(() => {
     if (data) {
       console.log("TTTesting");
-      toast.success("Search completed");
+      toast({ description: "Search completed" });
     }
-  }, [data]);
+  }, [data, toast]);
 
   // 用 useEffect 来替代 onError
   useEffect(() => {
     if (error) {
-      toast.error("Search failed", {
-        description: error.message,
-      });
+      toast({ title: "Search failed", description: error.message });
     }
-  }, [error]);
+  }, [error, toast]);
 
   const onSubmit = (param: z.infer<typeof searchFlightsFormSchema>) => {
     setSearchParams(param);
-    toast("Searching...");
+    toast({ description: "Searching..." });
     // 触发查询
     refetch();
   };

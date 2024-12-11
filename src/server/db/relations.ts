@@ -8,12 +8,12 @@ import {
   customer,
   ticket,
   bookingAgent,
-} from "./schema1";
+} from "./schema";
 
 export const airlineStaffRelations = relations(airlineStaff, ({ one }) => ({
   airline: one(airline, {
     fields: [airlineStaff.airlineName],
-    references: [airline.airlineName],
+    references: [airline.name],
   }),
 }));
 
@@ -26,7 +26,7 @@ export const airlineRelations = relations(airline, ({ many }) => ({
 export const airplaneRelations = relations(airplane, ({ one, many }) => ({
   airline: one(airline, {
     fields: [airplane.airlineName],
-    references: [airline.airlineName],
+    references: [airline.name],
   }),
   flights: many(flight),
 }));
@@ -34,7 +34,7 @@ export const airplaneRelations = relations(airplane, ({ one, many }) => ({
 export const flightRelations = relations(flight, ({ one, many }) => ({
   airline: one(airline, {
     fields: [flight.airlineName],
-    references: [airline.airlineName],
+    references: [airline.name],
   }),
   airplane: one(airplane, {
     fields: [flight.airplaneId],

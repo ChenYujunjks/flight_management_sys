@@ -1,5 +1,6 @@
 import "@/style/globals.css";
 import { Provider } from "@/components/provider";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
   title: "Flights",
@@ -15,6 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Provider>{children}</Provider>
+        <Toaster />
       </body>
     </html>
   );

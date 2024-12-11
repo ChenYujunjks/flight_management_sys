@@ -96,7 +96,7 @@ export const createFlightFormSchema = z.object({
   arrivalAirport: z.string().max(255),
   arrivalTime: z.string().max(255),
   price: z.string().max(255),
-  airplaneIdNum: z.coerce.number(),
+  airplaneId: z.string().max(9), // 修改为字符串，且最大长度为6
   status: z.enum([
     "upcoming",
     "in-progress",

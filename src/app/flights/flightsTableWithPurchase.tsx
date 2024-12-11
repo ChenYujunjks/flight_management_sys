@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { InferSelectModel } from "drizzle-orm";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { DataTable } from "@/components/dataTable";
 import { Button } from "@/components/ui/button";
 import { flight } from "@/server/db/schema";
@@ -115,21 +115,26 @@ export default FlightsTableWithPurchase;
 
 // PurchaseDialog 组件
 function PurchaseDialog({ row }: { row: any }) {
+  const { toast } = useToast();
   const [email, setEmail] = useState<string>("");
+
   const purchaseMutation = trpc.purchase.useMutation({
     onSuccess: () => {
-      toast.success("Purchase successful", {
+      toast({
+        title: "Purchase successful",
         description: `Purchased flight ${row.getValue(
           "flightNum"
-        )} From ${row.getValue("departureAirport")} to ${row.getValue(
+        )} from ${row.getValue("departureAirport")} to ${row.getValue(
           "arrivalAirport"
-        )} At ${new Date(row.getValue("departureTime")).toLocaleString()}`,
+        )} at ${new Date(row.getValue("departureTime")).toLocaleString()}.`,
       });
     },
     onError: (error) => {
       console.error("Purchase failed:", error);
-      toast.error("Purchase failed", {
-        description: error.message,
+      toast({
+        title: "Purchase failed",
+        description: error.message || "An unknown error occurred.",
+        variant: "destructive", // 用于显示错误样式
       });
     },
   });
