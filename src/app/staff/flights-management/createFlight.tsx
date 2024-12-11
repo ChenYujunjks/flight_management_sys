@@ -66,7 +66,7 @@ const CreateFlight = () => {
                   <FormItem>
                     <FormLabel>Airplane ID</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input type="text" maxLength={9} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -79,7 +79,7 @@ const CreateFlight = () => {
                   <FormItem>
                     <FormLabel>Arrival Airport</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input type="text" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,7 +105,7 @@ const CreateFlight = () => {
                   <FormItem>
                     <FormLabel>Departure Airport</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input type="text" maxLength={255} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,7 +150,7 @@ const CreateFlight = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="upcoming">Upcoming</SelectItem>
+                        <SelectItem value="ON-TIME">ON-TIME</SelectItem>
                         <SelectItem value="in-progress">In Progress</SelectItem>
                         <SelectItem value="delayed">Delayed</SelectItem>
                         <SelectItem value="cancelled">Cancelled</SelectItem>
