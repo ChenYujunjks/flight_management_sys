@@ -27,8 +27,18 @@ export async function createFlightAction(formData: FormData) {
     .where(eq(airlineStaff.email, user!.email));
   const airlineName = aNResult[0]!.airlineName;
 
+  // 生成类似 F5933 的 flightNum
+  function generateFlightNum(): string {
+    const randomNumber = Math.floor(1000 + Math.random() * 9000); // 生成 1000 到 9999 的随机数
+    return `F${randomNumber}`;
+  }
+  // 调用生成 flightNum 的函数
+  const flightNum = generateFlightNum();
+
   try {
-    await db.insert(flight).values({ ...fd, airlineName: airlineName });
+    await db
+      .insert(flight)
+      .values({ ...fd, flightNum, airlineName: airlineName });
   } catch {
     throw new Error("Failed to add flight");
   }

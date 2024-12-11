@@ -4,7 +4,6 @@ import { getUserType } from "@/server/auth/getUserType";
 import { db } from "@/server/db";
 import { bookingAgent, flight, ticket } from "@/server/db/schema";
 
-// 注意，这里不再直接 dynamic import
 import CustomerChartWrapper from "./customerChartWrapper";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {

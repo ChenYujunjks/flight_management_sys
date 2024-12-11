@@ -39,7 +39,7 @@ export default function SalesReport() {
     error,
     isLoading,
     refetch,
-  } = trpc.systemReport.getSalesReport.useQuery(
+  } = trpc.systemReport.useQuery(
     {
       startDate: date?.from ?? new Date(),
       endDate: date?.to ?? addDays(new Date(), 20),

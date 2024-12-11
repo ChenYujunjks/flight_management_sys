@@ -16,7 +16,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/components/provider";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import SpendingDataChart from "./spendingChart";
 
 // 定义 Zod schema 来校验用户选择的日期范围
@@ -28,6 +28,7 @@ const dateRangeSchema = z.object({
 type DateRangeInput = z.infer<typeof dateRangeSchema>;
 
 export default function SpendingPage() {
+  const { toast } = useToast();
   const [data, setData] = useState<
     {
       month: string;
@@ -71,24 +72,25 @@ export default function SpendingPage() {
     },
     {
       enabled: false, // 不自动请求，等待手动调用 refetch()
-      // 移除 onSuccess 和 onError
     }
   );
 
-  // 使用 useEffect 来代替 onSuccess
   useEffect(() => {
     if (queryData) {
       setData(queryData);
-      toast.success("Statistics fetched successfully");
+      toast({ description: "Statistics fetched successfully" });
     }
-  }, [queryData]);
+  }, [queryData, toast]);
 
   // 同样，如果需要错误处理，也可在 useEffect 中监听 error
   useEffect(() => {
     if (error) {
-      toast.error("Failed to fetch statistics", { description: error.message });
+      toast({
+        title: "Failed to fetch statistics",
+        description: error.message,
+      });
     }
-  }, [error]);
+  }, [error, toast]);
 
   // 提交表单时，使用 refetch 来手动触发请求
   const onSubmit = (input: DateRangeInput) => {
