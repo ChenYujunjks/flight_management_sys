@@ -1,9 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { airportFormSchema } from "~/lib/types";
-import { db } from "~/server/db";
-import { airport } from "~/server/db/schema";
+import { airportFormSchema } from "@/lib/types";
+import { db } from "@/server/db";
+import { airport } from "@/server/db/schema";
 
 export async function addAirportForm(formData: FormData) {
   const fd = airportFormSchema.parse({
@@ -13,7 +13,7 @@ export async function addAirportForm(formData: FormData) {
 
   try {
     await db.insert(airport).values(fd);
-  } catch (e) {
+  } catch {
     throw new Error("Failed to add airport");
   }
 

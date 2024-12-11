@@ -7,23 +7,31 @@ import { getUser } from "@/server/auth/getUser";
 import { db } from "@/server/db";
 import { airlineStaff, airplane } from "@/server/db/schema";
 
-export async function addAirplaneFormAction(fromData: FormData) {
+export async function addAirplaneFormAction(formData: FormData) {
+  // 从表单中解析数据
   const fd = airplaneFormSchema.parse({
-    seatsAmount: fromData.get("seatsAmount"),
+    airplaneId: formData.get("airplaneId"),
   });
   const user = await getUser();
+
   const aNResult = await db
     .select({
       airlineName: airlineStaff.airlineName,
     })
     .from(airlineStaff)
     .where(eq(airlineStaff.email, user!.email));
+  if (!aNResult.length) {
+    throw new Error("Airline staff not found or unauthorized");
+  }
   const airlineName = aNResult[0]!.airlineName;
-  const { seatsAmount } = fd;
-
+  const { airplaneId } = fd;
   try {
-    await db.insert(airplane).values({ seatsAmount, airlineName });
-  } catch (e) {
+    // 插入 airplane 数据
+    await db.insert(airplane).values({
+      id: airplaneId,
+      airlineName,
+    });
+  } catch {
     throw new Error("Failed to add airplane");
   }
 

@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { airplaneFormSchema } from "@/lib/types";
+import { airplaneFormSchema } from "@/lib/types"; // 确保 schema 已更新为使用 airplaneId
 import { addAirplaneFormAction } from "./addAirplaneFormAction";
 
 const AddAirplaneForm = () => {
@@ -24,20 +24,27 @@ const AddAirplaneForm = () => {
 
   return (
     <Form {...form}>
-      <form action={addAirplaneFormAction} className="m-2 flex flex-col gap-4">
+      <form
+        action={addAirplaneFormAction}
+        className="m-2 flex flex-col gap-4"
+        method="post"
+      >
+        {/* Airplane ID Input */}
         <FormField
           control={form.control}
-          name="seatsAmount"
+          name="airplaneId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Seat Amount</FormLabel>
+              <FormLabel>Airplane ID</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input type="text" {...field} placeholder="Enter Airplane ID" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {/* Submit Button */}
         <Button
           disabled={
             airplaneFormSchema.safeParse(form.getValues()).success === false

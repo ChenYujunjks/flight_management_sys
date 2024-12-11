@@ -76,7 +76,7 @@ export const airportFormSchema = z.object({
 });
 
 export const airplaneFormSchema = z.object({
-  seatsAmount: z.coerce.number(),
+  airplaneId: z.string().min(1, "Airplane ID is required"),
 });
 
 export const updateFlightFormSchema = z.object({

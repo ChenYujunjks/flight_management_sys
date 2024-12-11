@@ -9,20 +9,20 @@ import AddAirplaneForm from "./addAirplaneForm";
 const airportTableColumn: ColumnDef<InferSelectModel<typeof airplane>>[] = [
   {
     header: "Airplane ID",
-    accessorKey: "idNum",
+    accessorKey: "id",
   },
   {
     header: "Airline Name",
     accessorKey: "airlineName",
   },
-  {
-    header: "Seats Amount",
-    accessorKey: "seatsAmount",
-  },
 ];
 
 const AirplaneManagementPage = async () => {
   const user = await getUser();
+  if (!user) {
+    return <p>Unauthorized</p>; // 如果用户未登录，显示未授权信息
+  }
+
   const aNResult = await db
     .select({
       airlineName: airlineStaff.airlineName,
@@ -30,6 +30,10 @@ const AirplaneManagementPage = async () => {
     .from(airlineStaff)
     .where(eq(airlineStaff.email, user!.email));
   const airlineName = aNResult[0]!.airlineName;
+  if (!airlineName) {
+    return <p>No airline associated with the current user.</p>;
+  }
+
   const data = await db
     .select()
     .from(airplane)
