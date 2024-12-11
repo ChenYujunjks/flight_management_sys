@@ -8,6 +8,8 @@ This repository is a full-stack project for managing flight reservations, built 
 - **Drizzle ORM** for database management
 - **Lucia** for authentication
 
+---
+
 ## Getting Started
 
 Follow these steps to get the project up and running on your local machine.
@@ -15,8 +17,11 @@ Follow these steps to get the project up and running on your local machine.
 ### Prerequisites
 
 - Node.js >= 16
-- A database compatible with Drizzle ORM (e.g., PostgreSQL)
-- A .env file with appropriate environment variables (explained below)
+- A database compatible with Drizzle ORM (e.g., MySQL or PostgreSQL)
+- A `.env` file with appropriate environment variables (explained below)
+- `pnpm` as your package manager (recommended)
+
+---
 
 ### Installation
 
@@ -34,29 +39,45 @@ Follow these steps to get the project up and running on your local machine.
    ```
 
 3. **Environment Setup**
-   Create a `.env` file in the root directory with the following variables:
+
+   Create a `.env` file in the root directory and configure your environment variables. Example:
+
    ```env
-   DATABASE_URL="your-database-url"
+   DATABASE_URL="mysql://your-username:your-password@localhost:3306/your-database-name"
    NEXTAUTH_SECRET="your-secret"
    LUCIA_SECRET="your-lucia-secret"
    ```
 
+4. **Database Initialization**
+
+   - First, apply your schema to the database:
+
+     ```bash
+     npx drizzle-kit push
+     ```
+
+   - Then, source the database initialization scripts:
+     ```bash
+     source db_init/your-script-1.sql
+     source db_init/your-script-2.sql
+     source db_init/your-script-3.sql
+     ```
+
+---
+
 ### Running the Project
 
-1. **Database Migration**
-   Use Drizzle ORM to migrate your database:
+1. **Run the Development Server**
+
+   Start the development server:
 
    ```bash
-   npx drizzle migrate
+   pnpm dev
    ```
 
-2. **Run the Development Server**
+   Navigate to `http://localhost:3000` to see the application.
 
-   ```bash
-   npm run dev
-   ```
-
-   Navigate to `http://localhost:3333` to see the application.
+---
 
 ## Tech Stack Overview
 
@@ -74,24 +95,13 @@ The frontend is built using [Next.js](https://nextjs.org/), a React framework wi
 
 ### Drizzle ORM
 
-[Drizzle ORM](https://drizzle.team) is utilized for database interaction, making queries easy and type-safe.
+[Drizzle ORM](https://drizzle.team) is utilized for database interaction, making queries easy and type-safe. You can manage your database schema with a declarative approach.
 
 ### Lucia for Authentication
 
 [Lucia](https://lucia-auth.com) is integrated for authentication to keep the app secure, managing sessions and sign-ins.
 
-## Folder Structure
-
-```
-.
-├── src
-│   ├── pages            # Next.js pages
-│   ├── Components       # Reusable React components
-│   ├── server           # tRPC server setup and backend logic
-│   ├── styles           # Tailwind CSS and other styles
-│   ├── db               # Drizzle ORM database setup and models
-└── .env.example         # Example environment configuration
-```
+---
 
 ## Contribution Guide
 
@@ -101,25 +111,8 @@ The frontend is built using [Next.js](https://nextjs.org/), a React framework wi
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Create a pull request
 
+---
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
