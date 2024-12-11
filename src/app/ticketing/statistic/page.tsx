@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { type DateRange } from "react-day-picker";
@@ -30,9 +30,9 @@ type DateRangeInput = z.infer<typeof dateRangeSchema>;
 export default function SpendingPage() {
   const [data, setData] = useState<
     {
-      month: number;
-      year: number;
-      sum: string;
+      month: string;
+      year: string;
+      sum: string | null;
     }[]
   >([]);
 
@@ -59,27 +59,39 @@ export default function SpendingPage() {
   const { startDate, endDate } = form.getValues();
 
   // 使用useQuery来查询统计数据，初始enabled为false表示不在挂载时立即请求
-  const { refetch, isLoading } = trpc.statistic.useQuery(
+  const {
+    refetch,
+    isLoading,
+    data: queryData,
+    error,
+  } = trpc.statistic.useQuery(
     {
       startDate,
       endDate,
     },
     {
       enabled: false, // 不自动请求，等待手动调用 refetch()
-      onError: (err) => {
-        toast.error("Failed to fetch statistics", { description: err.message });
-      },
-      onSuccess: (result) => {
-        setData(result);
-        toast.success("Statistics fetched successfully");
-      },
+      // 移除 onSuccess 和 onError
     }
   );
 
+  // 使用 useEffect 来代替 onSuccess
+  useEffect(() => {
+    if (queryData) {
+      setData(queryData);
+      toast.success("Statistics fetched successfully");
+    }
+  }, [queryData]);
+
+  // 同样，如果需要错误处理，也可在 useEffect 中监听 error
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to fetch statistics", { description: error.message });
+    }
+  }, [error]);
+
   // 提交表单时，使用 refetch 来手动触发请求
   const onSubmit = (input: DateRangeInput) => {
-    // 因为我们用 useQuery 时参数是从 form.getValues() 获取的
-    // 如果需要的话，可以先调用 form.setValue 来同步更新 startDate, endDate
     form.setValue("startDate", input.startDate);
     form.setValue("endDate", input.endDate);
     // 触发请求

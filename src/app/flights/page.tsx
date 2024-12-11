@@ -1,9 +1,7 @@
-// flights/page.tsx
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-//import { type InferSelectModel } from "drizzle-orm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
@@ -33,19 +31,28 @@ const SearchPage = () => {
 
   // 使用 tRPC 的 flights.search 查询
   const { data, isLoading, error, refetch } = trpc.search.useQuery(
-    searchParams || {}, // 传递搜索参数
+    searchParams || {},
     {
-      enabled: !!searchParams, // 仅在有搜索参数时启用查询
-      onError: (err) => {
-        toast.error("Search failed", {
-          description: err.message,
-        });
-      },
-      onSuccess: () => {
-        toast.success("Search completed");
-      },
+      enabled: !!searchParams,
     }
   );
+
+  // 用 useEffect 来替代 onSuccess
+  useEffect(() => {
+    if (data) {
+      console.log("TTTesting");
+      toast.success("Search completed");
+    }
+  }, [data]);
+
+  // 用 useEffect 来替代 onError
+  useEffect(() => {
+    if (error) {
+      toast.error("Search failed", {
+        description: error.message,
+      });
+    }
+  }, [error]);
 
   const onSubmit = (param: z.infer<typeof searchFlightsFormSchema>) => {
     setSearchParams(param);
