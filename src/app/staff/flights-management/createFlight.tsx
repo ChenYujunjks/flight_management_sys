@@ -37,7 +37,7 @@ const CreateFlight = () => {
     mode: "all",
     resolver: zodResolver(createFlightFormSchema),
     defaultValues: {
-      airplaneIdNum: 1,
+      airplaneId: "U100",
       price: "100",
     },
   });
@@ -61,7 +61,7 @@ const CreateFlight = () => {
             >
               <FormField
                 control={form.control}
-                name="airplaneIdNum"
+                name="airplaneId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Airplane ID</FormLabel>

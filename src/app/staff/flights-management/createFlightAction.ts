@@ -15,7 +15,7 @@ export async function createFlightAction(formData: FormData) {
     arrivalAirport: formData.get("arrivalAirport"),
     arrivalTime: formData.get("arrivalTime"),
     price: formData.get("price"),
-    airplaneIdNum: formData.get("airplaneIdNum"),
+    airplaneId: formData.get("airplaneId"),
     status: formData.get("status"),
   });
   const user = await getUser();
