@@ -3,11 +3,6 @@ import { Provider } from "@/components/provider";
 import { Toaster } from "@/components/ui/toaster";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Flights",
-  description: "Manage your journey in one app",
-};
-
 export default function RootLayout({
   children,
 }: {
