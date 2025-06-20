@@ -7,12 +7,11 @@ export const metadata = {
   title: "Flights",
   description: "Manage your journey in one app",
 };
-
-export default function RootLayout({
-  children,
-}: {
+type Props = Readonly<{
   children: React.ReactNode;
-}) {
+}>;
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body className="bg-white text-gray-800">
