@@ -2,8 +2,8 @@
 import { publicProcedure } from "../context";
 import { db } from "@/server/db";
 import { flight } from "@/server/db/schema";
-import { and, sql } from "drizzle-orm";
 import { searchFlightsFormSchema } from "@/lib/types";
+import { eq, and, sql } from "drizzle-orm";
 
 export const searchRouter = publicProcedure
   .input(searchFlightsFormSchema)
@@ -13,29 +13,24 @@ export const searchRouter = publicProcedure
     const conditions = [];
 
     if (arrivalAirport) {
-      conditions.push(`arrival_airport = '${arrivalAirport}'`);
+      conditions.push(eq(flight.arrivalAirport, arrivalAirport));
     }
 
     if (departureAirport) {
-      conditions.push(`departure_airport = '${departureAirport}'`);
+      conditions.push(eq(flight.departureAirport, departureAirport));
     }
 
     if (departureDate) {
-      conditions.push(`DATE(departure_time) = '${departureDate}'`);
+      conditions.push(sql`DATE(${flight.departureTime}) = ${departureDate}`);
     }
 
-    const whereClause =
-      conditions.length > 0 ? conditions.join(" AND ") : "TRUE";
+    // 添加必须为未来航班
+    conditions.push(sql`DATE(${flight.departureTime}) > CURDATE()`);
 
     const result = await db
       .select()
       .from(flight)
-      .where(
-        and(
-          sql.raw(`${whereClause}`),
-          sql`DATE(${flight.departureTime}) > CURDATE()`
-        )
-      );
+      .where(and(...conditions));
 
     return result;
   });
