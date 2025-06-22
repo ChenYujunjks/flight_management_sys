@@ -41,6 +41,7 @@ async function main() {
   await db.insert(flight).values(flights);
 
   console.log("✅ All data seeded!");
+  process.exit(1);
 }
 
 main().catch((err) => {
